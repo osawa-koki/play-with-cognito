@@ -8,7 +8,8 @@
   "license": "Apache-2.0",
   "private": false,
   "scripts": {
-    "dev": "ts-node ./src/index.ts",
+    "dev": "nodemon ./src/index.ts",
+    "start": "ts-node ./src/index.ts",
     "lint:check": "eslint .",
     "lint:write": "eslint . --fix"
   },
@@ -24,6 +25,7 @@
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "nodemon": "^2.0.22"
   }
 }
