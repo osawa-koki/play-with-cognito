@@ -29,5 +29,8 @@ module.exports = {
 
     // https://eslint.org/docs/latest/rules/quote-props
     'quote-props': ['error', 'consistent-as-needed'],
+
+    // https://eslint.org/docs/latest/rules/no-unused-vars
+    'no-unused-vars': ['error', { args: 'after-used', argsIgnorePattern: '^_' }],
   },
 }
