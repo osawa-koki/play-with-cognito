@@ -44,3 +44,16 @@ Resources:
       ClientName: !Sub ${AWS::StackName}-client-app
       UserPoolId: !Ref MyCognitoUserPool
       GenerateSecret: false
+
+Outputs:
+  # ユーザプールのIDを出力
+  UserPoolId:
+    Value: !Ref MyCognitoUserPool
+    Export:
+      Name: !Sub ${AWS::StackName}-user-pool-id
+
+  # ユーザプールクライアントのIDを出力
+  UserPoolClientId:
+    Value: !Ref MyCognitoUserPoolClient
+    Export:
+      Name: !Sub ${AWS::StackName}-user-pool-client-id
