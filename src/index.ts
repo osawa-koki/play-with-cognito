@@ -28,7 +28,7 @@ app.post('/sign_up', (req, res) => {
 
   if (name === '' || email === '' || password === '') {
     res.status(400).send(JSON.stringify({
-      message: 'Invalid JSON property.',
+      message: 'Invalid JSON property.'
     }))
     return
   }
@@ -36,12 +36,12 @@ app.post('/sign_up', (req, res) => {
   const attributeList = []
   const attributeName = new AmazonCognitoIdentity.CognitoUserAttribute({
     Name: 'name',
-    Value: name,
+    Value: name
   })
   attributeList.push(attributeName)
   const attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute({
     Name: 'email',
-    Value: email,
+    Value: email
   })
   attributeList.push(attributeEmail)
 
@@ -55,7 +55,7 @@ app.post('/sign_up', (req, res) => {
       if (err !== null) {
         res.status(500).send(JSON.stringify({
           message: 'Internal Server Error',
-          error: err?.message,
+          error: err?.message
         }))
         return
       }
@@ -65,15 +65,15 @@ app.post('/sign_up', (req, res) => {
         const cognitoUser = result.user
         res.send(JSON.stringify({
           message: 'Success',
-          cognitoUser,
+          cognitoUser
         }))
       } else {
         res.status(500).send(JSON.stringify({
           message: 'Internal Server Error',
-          error: 'result is undefined',
+          error: 'result is undefined'
         }))
       }
-    },
+    }
   )
 })
 
@@ -83,7 +83,7 @@ app.post('/verify_code', (req, res) => {
 
   const userData = {
     Username: email,
-    Pool: userPool,
+    Pool: userPool
   }
   const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
 
@@ -92,7 +92,7 @@ app.post('/verify_code', (req, res) => {
     if (err !== null) {
       res.status(500).send(JSON.stringify({
         message: 'Internal Server Error',
-        error: err?.message,
+        error: err?.message
       }))
       return
     }
@@ -101,12 +101,12 @@ app.post('/verify_code', (req, res) => {
     if (result !== undefined) {
       res.send(JSON.stringify({
         message: 'Success',
-        result,
+        result
       }))
     } else {
       res.status(500).send(JSON.stringify({
         message: 'Internal Server Error',
-        error: 'result is undefined',
+        error: 'result is undefined'
       }))
     }
   })

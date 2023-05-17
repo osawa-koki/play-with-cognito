@@ -3,7 +3,7 @@ import getEnvVar from './getEnvVar'
 
 const poolData = {
   ClientId: getEnvVar<string>('USER_POOL_CLIENT_ID'),
-  UserPoolId: getEnvVar<string>('USER_POOL_ID'),
+  UserPoolId: getEnvVar<string>('USER_POOL_ID')
 }
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData)

@@ -13,7 +13,13 @@ module.exports = {
   },
   rules: {
     // https://eslint.org/docs/latest/rules/comma-dangle
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': ['error', {
+      arrays: 'ignore',
+      objects: 'ignore',
+      imports: 'ignore',
+      exports: 'ignore',
+      functions: 'ignore',
+    }], // TODO: enable(always-multiline)
 
     // https://eslint.org/docs/latest/rules/quotes
     'quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
