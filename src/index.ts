@@ -111,6 +111,37 @@ app.post('/verify_code', (req, res) => {
   })
 })
 
+app.post('/sign_in', (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+
+  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+    Username: email,
+    Password: password
+  })
+
+  const userData = {
+    Username: email,
+    Pool: userPool
+  }
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
+
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: result => {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result
+      }))
+    },
+    onFailure: err => {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: err?.message
+      }))
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}.`)
 })
