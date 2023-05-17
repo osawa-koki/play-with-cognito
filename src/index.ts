@@ -33,17 +33,16 @@ app.post('/sign_up', (req, res) => {
     return
   }
 
-  const attributeList = []
-  const attributeName = new AmazonCognitoIdentity.CognitoUserAttribute({
-    Name: 'name',
-    Value: name
-  })
-  attributeList.push(attributeName)
-  const attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute({
-    Name: 'email',
-    Value: email
-  })
-  attributeList.push(attributeEmail)
+  const attributeList = [
+    {
+      Name: 'name',
+      Value: name
+    },
+    {
+      Name: 'email',
+      Value: email
+    }
+  ].map(attribute => new AmazonCognitoIdentity.CognitoUserAttribute(attribute))
 
   userPool.signUp(
     email,
