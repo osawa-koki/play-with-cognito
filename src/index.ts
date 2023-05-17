@@ -8,6 +8,7 @@ import type SignUpStruct from './interface/sign_up_struct'
 const app = express()
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 const port = getEnvVar<number>('PORT')
 
