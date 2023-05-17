@@ -43,7 +43,7 @@ Resources:
     Properties:
       ClientName: !Sub ${AWS::StackName}-client-app
       UserPoolId: !Ref MyCognitoUserPool
-      GenerateSecret: false
+      GenerateSecret: true
 
 Outputs:
   # ユーザプールのIDを出力
