@@ -73,8 +73,43 @@ app.post('/sign_up', (req, res) => {
           error: 'result is undefined',
         }))
       }
-    }
+    },
   )
+})
+
+app.post('/verify_code', (req, res) => {
+  const email = req.body.email
+  const code = req.body.code
+
+  const userData = {
+    Username: email,
+    Pool: userPool,
+  }
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
+
+  cognitoUser.confirmRegistration(code, true, (err, result) => {
+    // 確認がエラーとなった場合の処理
+    if (err !== null) {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: err?.message,
+      }))
+      return
+    }
+
+    // 確認が成功した場合の処理
+    if (result !== undefined) {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result,
+      }))
+    } else {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: 'result is undefined',
+      }))
+    }
+  })
 })
 
 app.listen(port, () => {
