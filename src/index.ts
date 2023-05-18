@@ -1,4 +1,5 @@
 import './common/initializer'
+import { CognitoIdentityServiceProvider } from 'aws-sdk'
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js'
 import express from 'express'
 import getEnvVar from './common/getEnvVar'
@@ -137,6 +138,45 @@ app.post('/sign_in', (req, res) => {
       res.status(500).send(JSON.stringify({
         message: 'Internal Server Error',
         error: err?.message
+      }))
+    }
+  })
+})
+
+app.get('/verify_jwt', (req, res) => {
+  const accessToken = req.headers.authorization?.split(' ')[1]
+  if (accessToken === undefined) {
+    res.status(400).send(JSON.stringify({
+      message: 'Invalid Authorization header.'
+    }))
+    return
+  }
+
+  const newLocal = 'ap-northeast-1'
+  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
+  cognitoidentityserviceprovider.getUser({
+    AccessToken: accessToken
+  }, (err, result) => {
+    // ユーザー情報の取得がエラーとなった場合の処理
+    if (err !== null) {
+      res.status(402).send(JSON.stringify({
+        message: 'Invalid Access Token.',
+        error: err?.message,
+        token: accessToken
+      }))
+      return
+    }
+
+    // ユーザー情報の取得が成功した場合の処理
+    if (result !== undefined) {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result
+      }))
+    } else {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: 'result is undefined'
       }))
     }
   })
