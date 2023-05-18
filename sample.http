@@ -1,0 +1,43 @@
+# `Hello World`を出力するAPI
+GET http://localhost:3000
+
+###
+
+# サインアップするAPI
+POST http://localhost:3000/sign_up
+Content-Type: application/json
+
+{
+  "name": "your-name",
+  "email": "user@example.com",
+  "password": "Password1234"
+}
+
+###
+
+# 認証コードを検証するAPI
+POST http://localhost:3000/verify_code
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "code": "123456"
+}
+
+###
+
+# サインインするAPI
+POST http://localhost:3000/sign_in
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password1234"
+}
+
+###
+
+# 実際に認証トークンを使ってリクエストを送るAPI
+GET http://localhost:3000/verify_jwt
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
