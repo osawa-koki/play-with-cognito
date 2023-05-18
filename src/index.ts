@@ -161,8 +161,7 @@ app.get('/verify_jwt', (req, res) => {
     if (err !== null) {
       res.status(402).send(JSON.stringify({
         message: 'Invalid Access Token.',
-        error: err?.message,
-        token: accessToken
+        error: err?.message
       }))
       return
     }
