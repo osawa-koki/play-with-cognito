@@ -34,7 +34,10 @@ jobs:
         run: yarn install
         working-directory: ${{ env.server-directory }}/src
       - name: Lint
-        run: yarn lint:check
+        run: yarn lint
+        working-directory: ${{ env.server-directory }}/src
+      - name: Prettier
+        run: yarn prettier:check
         working-directory: ${{ env.server-directory }}/src
       - name: Test
         run: yarn test
@@ -73,7 +76,7 @@ jobs:
         run: yarn install
         working-directory: ${{ env.client-directory }}
       - name: Lint
-        run: yarn lint:check
+        run: yarn lint
         working-directory: ${{ env.client-directory }}
       - name: Prettier
         run: yarn prettier:check
@@ -84,6 +87,9 @@ jobs:
       - name: Vulnerability check
         run: yarn audit
         working-directory: ${{ env.client-directory }}
+      # - name: Deprication check
+      #   run: yarn outdated
+      #   working-directory: ${{ env.client-directory }}
   nextjs-build:
     needs:
       - nextjs-check
