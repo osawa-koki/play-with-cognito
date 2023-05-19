@@ -219,6 +219,57 @@ app.delete('/sign_out', (req, res) => {
   })
 })
 
+app.put('/change_password', (req, res) => {
+  const email = req.body.email
+  const oldPassword = req.body.old_password
+  const newPassword = req.body.new_password
+
+  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+    Username: email,
+    Password: oldPassword
+  })
+
+  const userData = {
+    Username: email,
+    Pool: userPool
+  }
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
+
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: _result => {
+      cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
+        // パスワード変更がエラーとなった場合の処理
+        if (err !== null) {
+          res.status(500).send(JSON.stringify({
+            message: 'Internal Server Error',
+            error: err?.message
+          }))
+          return
+        }
+
+        // パスワード変更が成功した場合の処理
+        if (result !== undefined) {
+          res.send(JSON.stringify({
+            message: 'Success',
+            result
+          }))
+        } else {
+          res.status(500).send(JSON.stringify({
+            message: 'Internal Server Error',
+            error: 'result is undefined'
+          }))
+        }
+      })
+    },
+    onFailure: err => {
+      res.status(400).send(JSON.stringify({
+        message: 'Failed to change password.',
+        error: err?.message
+      }))
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}.`)
 })
