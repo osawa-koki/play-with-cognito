@@ -28,10 +28,11 @@ Resources:
         - AttributeDataType: String
           Name: email
           Required: true
-          Mutable: true
         - AttributeDataType: String
           Name: name
           Required: true
+        - AttributeDataType: String
+          Name: comment
           Mutable: true
       UsernameAttributes:
         - email
