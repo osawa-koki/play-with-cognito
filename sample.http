@@ -64,11 +64,11 @@ Content-Type: application/json
 ###
 
 # パスワードを忘れた場合に認証コードを送るAPI
-POST http://localhost:3000/reset_password
+PUT http://localhost:3000/reset_password
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
+  "email": "user@example.com"
 }
 
 ###
@@ -79,7 +79,7 @@ Content-Type: application/json
 
 {
   "email": "user@example.com",
-  "code": "123456",
+  "verification_code": "123456",
   "new_password": "Password5678"
 }
 

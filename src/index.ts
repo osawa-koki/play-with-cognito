@@ -371,7 +371,7 @@ app.put('/update_attributes', (req, res) => {
   })
 })
 
-app.delete('/withdraw', (req, res) => {
+app.delete('/withdrawal', (req, res) => {
   const accessToken = req.headers.authorization?.split(' ')[1]
   if (accessToken === undefined) {
     res.status(400).send(JSON.stringify({
