@@ -335,10 +335,10 @@ app.put('/update_attributes', (req, res) => {
 
   const attributes = []
   if (comment !== undefined) {
-    attributes.push({
+    attributes.push(new AmazonCognitoIdentity.CognitoUserAttribute({
       Name: 'custom:comment',
       Value: comment
-    })
+    }))
   }
 
   const newLocal = 'ap-northeast-1'
