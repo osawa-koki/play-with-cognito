@@ -32,7 +32,7 @@ Resources:
           Name: name
           Required: true
         - AttributeDataType: String
-          Name: custom:comment
+          Name: comment
           Mutable: true
       UsernameAttributes:
         - email
