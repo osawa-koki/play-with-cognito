@@ -1,0 +1,102 @@
+# `Hello World`を出力するAPI
+GET http://localhost:3000
+
+###
+
+# サインアップするAPI
+POST http://localhost:3000/sign_up
+Content-Type: application/json
+
+{
+  "name": "your-name",
+  "email": "user@example.com",
+  "password": "Password1234"
+}
+
+###
+
+# 認証コードを検証するAPI
+POST http://localhost:3000/verify_code
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "code": "123456"
+}
+
+###
+
+# サインインするAPI
+POST http://localhost:3000/sign_in
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password1234"
+}
+
+###
+
+# 実際に認証トークンを使ってリクエストを送るAPI
+GET http://localhost:3000/verify_jwt
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
+
+###
+
+# ログアウトするAPI
+DELETE http://localhost:3000/sign_out
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
+
+###
+
+# パスワードを変更するAPI
+PUT http://localhost:3000/change_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "old_password": "Password1234",
+  "new_password": "Password5678"
+}
+
+###
+
+# パスワードを忘れた場合に認証コードを送るAPI
+PUT http://localhost:3000/reset_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+
+###
+
+# パスワードをリセットするAPI
+PUT http://localhost:3000/confirm_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "verification_code": "123456",
+  "new_password": "Password5678"
+}
+
+###
+
+# ユーザー情報を変更するAPI
+PUT http://localhost:3000/update_attributes
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
+
+{
+  "comment": "Hello World"
+}
+
+###
+
+# 退会するAPI
+DELETE http://localhost:3000/withdrawal
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
