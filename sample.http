@@ -41,3 +41,62 @@ Content-Type: application/json
 GET http://localhost:3000/verify_jwt
 Content-Type: application/json
 Authorization: Bearer <JWTアクセストークン>
+
+###
+
+# ログアウトするAPI
+DELETE http://localhost:3000/sign_out
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
+
+###
+
+# パスワードを変更するAPI
+PUT http://localhost:3000/change_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "old_password": "Password1234",
+  "new_password": "Password5678"
+}
+
+###
+
+# パスワードを忘れた場合に認証コードを送るAPI
+POST http://localhost:3000/reset_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+}
+
+###
+
+# パスワードをリセットするAPI
+PUT http://localhost:3000/confirm_password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "code": "123456",
+  "new_password": "Password5678"
+}
+
+###
+
+# ユーザー情報を変更するAPI
+PUT http://localhost:3000/update_attributes
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
+
+{
+  "comment": "Hello World"
+}
+
+###
+
+# 退会するAPI
+DELETE http://localhost:3000/withdrawal
+Content-Type: application/json
+Authorization: Bearer <JWTアクセストークン>
