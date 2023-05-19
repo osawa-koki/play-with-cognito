@@ -28,9 +28,11 @@ Resources:
         - AttributeDataType: String
           Name: email
           Required: true
+          Mutable: true
         - AttributeDataType: String
           Name: name
           Required: true
+          Mutable: true
       UsernameAttributes:
         - email
       AutoVerifiedAttributes:
