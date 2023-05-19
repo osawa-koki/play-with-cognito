@@ -371,6 +371,44 @@ app.put('/update_attributes', (req, res) => {
   })
 })
 
+app.delete('/withdraw', (req, res) => {
+  const accessToken = req.headers.authorization?.split(' ')[1]
+  if (accessToken === undefined) {
+    res.status(400).send(JSON.stringify({
+      message: 'Invalid Authorization header.'
+    }))
+    return
+  }
+
+  const newLocal = 'ap-northeast-1'
+  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
+  cognitoidentityserviceprovider.deleteUser({
+    AccessToken: accessToken
+  }, (err, result) => {
+    // ユーザーの削除がエラーとなった場合の処理
+    if (err !== null) {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: err?.message
+      }))
+      return
+    }
+
+    // ユーザーの削除が成功した場合の処理
+    if (result !== undefined) {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result
+      }))
+    } else {
+      res.status(500).send(JSON.stringify({
+        message: 'Internal Server Error',
+        error: 'result is undefined'
+      }))
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}.`)
 })
