@@ -270,6 +270,58 @@ app.put('/change_password', (req, res) => {
   })
 })
 
+app.put('/reset_password', (req, res) => {
+  const email = req.body.email
+
+  const userData = {
+    Username: email,
+    Pool: userPool
+  }
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
+
+  cognitoUser.forgotPassword({
+    onSuccess: result => {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result
+      }))
+    },
+    onFailure: err => {
+      res.status(400).send(JSON.stringify({
+        message: 'Failed to reset password.',
+        error: err?.message
+      }))
+    }
+  })
+})
+
+app.put('/confirm_password', (req, res) => {
+  const email = req.body.email
+  const verificationCode = req.body.verification_code
+  const newPassword = req.body.new_password
+
+  const userData = {
+    Username: email,
+    Pool: userPool
+  }
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData)
+
+  cognitoUser.confirmPassword(verificationCode, newPassword, {
+    onSuccess: result => {
+      res.send(JSON.stringify({
+        message: 'Success',
+        result
+      }))
+    },
+    onFailure: err => {
+      res.status(400).send(JSON.stringify({
+        message: 'Failed to confirm password.',
+        error: err?.message
+      }))
+    }
+  })
+})
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}.`)
 })
