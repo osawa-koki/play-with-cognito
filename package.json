@@ -11,7 +11,8 @@
     "dev": "nodemon ./src/index.ts",
     "start": "ts-node ./src/index.ts",
     "lint:check": "eslint .",
-    "lint:write": "eslint . --fix"
+    "lint:write": "eslint . --fix",
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^6.2.0",
