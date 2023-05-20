@@ -7,6 +7,12 @@ import type SignUpStruct from './interface/sign_up_struct'
 import getJwtToken from './common/getJwtToken'
 import areAllNonEmptyStrings from './common/areAllNonEmptyStrings'
 import makeCognitoUserAttributes from './common/makeCognitoUserAttributes'
+import type VerifyCodeStruct from './interface/verify_code_struct'
+import type SignInStruct from './interface/sign_in_struct'
+import type ChangePasswordStruct from './interface/change_password_struct'
+import type ResetPasswordStruct from './interface/reset_password_struct'
+import type ConfirmPasswordStruct from './interface/confirm_password_struct'
+import type UpdateAttributesStruct from './interface/update_attributes_struct'
 
 const app = express()
 
@@ -74,8 +80,9 @@ app.post('/sign_up', (req, res) => {
 })
 
 app.post('/verify_code', (req, res) => {
-  const email = req.body.email
-  const code = req.body.code
+  const body: VerifyCodeStruct = req.body
+  const email = body.email
+  const code = body.code
 
   const userData = {
     Username: email,
@@ -109,8 +116,9 @@ app.post('/verify_code', (req, res) => {
 })
 
 app.post('/sign_in', (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
+  const body: SignInStruct = req.body
+  const email = body.email
+  const password = body.password
 
   const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
     Username: email,
@@ -212,9 +220,10 @@ app.delete('/sign_out', (req, res) => {
 })
 
 app.put('/change_password', (req, res) => {
-  const email = req.body.email
-  const oldPassword = req.body.old_password
-  const newPassword = req.body.new_password
+  const body: ChangePasswordStruct = req.body
+  const email = body.email
+  const oldPassword = body.old_password
+  const newPassword = body.new_password
 
   const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
     Username: email,
@@ -263,7 +272,8 @@ app.put('/change_password', (req, res) => {
 })
 
 app.put('/reset_password', (req, res) => {
-  const email = req.body.email
+  const body: ResetPasswordStruct = req.body
+  const email = body.email
 
   const userData = {
     Username: email,
@@ -288,9 +298,10 @@ app.put('/reset_password', (req, res) => {
 })
 
 app.put('/confirm_password', (req, res) => {
-  const email = req.body.email
-  const verificationCode = req.body.verification_code
-  const newPassword = req.body.new_password
+  const body: ConfirmPasswordStruct = req.body
+  const email = body.email
+  const verificationCode = body.verification_code
+  const newPassword = body.new_password
 
   const userData = {
     Username: email,
@@ -323,7 +334,8 @@ app.put('/update_attributes', (req, res) => {
     return
   }
 
-  const comment = req.body.comment
+  const body: UpdateAttributesStruct = req.body
+  const comment = body.comment
 
   const attributes = []
   if (comment !== undefined) {
