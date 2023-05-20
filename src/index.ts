@@ -5,6 +5,8 @@ import getEnvVar from './common/getEnvVar'
 import { cognitoidentityserviceprovider, userPool } from './common/cognito'
 import type SignUpStruct from './interface/sign_up_struct'
 import getJwtToken from './common/getJwtToken'
+import areAllNonEmptyStrings from './common/areAllNonEmptyStrings'
+import makeCognitoUserAttributes from './common/makeCognitoUserAttributes'
 
 const app = express()
 
@@ -27,23 +29,17 @@ app.post('/sign_up', (req, res) => {
   const email = body.email
   const password = body.password
 
-  if (name === '' || email === '' || password === '') {
+  if (areAllNonEmptyStrings(name, email, password) === false) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid JSON property.'
     }))
     return
   }
 
-  const attributeList = [
-    {
-      Name: 'name',
-      Value: name
-    },
-    {
-      Name: 'email',
-      Value: email
-    }
-  ].map(attribute => new AmazonCognitoIdentity.CognitoUserAttribute(attribute))
+  const attributeList = makeCognitoUserAttributes({
+    name,
+    email
+  })
 
   userPool.signUp(
     email,
