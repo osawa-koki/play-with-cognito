@@ -34,7 +34,7 @@ GitHub Secretsに以下の値を設定します。
 
 ### 実行
 
-以下のコマンドを実行します。  
+`yarn install`でnpmモジュールをインストールしてから、以下のコマンドを実行します。  
 
 ```shell
 yarn start
