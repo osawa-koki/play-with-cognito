@@ -15,6 +15,7 @@ import {
   type ConfirmPasswordStruct,
   type UpdateAttributesStruct
 } from './interface/interface'
+import statusCode from './common/statusCode'
 
 const app = express()
 
@@ -38,7 +39,7 @@ app.post('/sign_up', (req, res) => {
   const password = body.password
 
   if (areAllNonEmptyStrings(name, email, password) === false) {
-    res.status(400).send(JSON.stringify({
+    res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
       message: 'Invalid JSON property.'
     }))
     return
@@ -57,8 +58,8 @@ app.post('/sign_up', (req, res) => {
     (err, result) => {
       // 登録がエラーとなった場合の処理
       if (err !== null) {
-        res.status(500).send(JSON.stringify({
-          message: 'Internal Server Error',
+        res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
+          message: 'Value is invalid.',
           error: err?.message
         }))
         return
@@ -67,14 +68,13 @@ app.post('/sign_up', (req, res) => {
       // 登録が成功した場合の処理
       if (result !== undefined) {
         const cognitoUser = result.user
-        res.send(JSON.stringify({
+        res.status(statusCode.SUCCESS).send(JSON.stringify({
           message: 'Success',
           cognitoUser
         }))
       } else {
-        res.status(500).send(JSON.stringify({
-          message: 'Internal Server Error',
-          error: 'result is undefined'
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+          message: 'Server error occurred while sign up.'
         }))
       }
     }
@@ -95,8 +95,8 @@ app.post('/verify_code', (req, res) => {
   cognitoUser.confirmRegistration(code, true, (err, result) => {
     // 確認がエラーとなった場合の処理
     if (err !== null) {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
+        message: 'Value is invalid.',
         error: err?.message
       }))
       return
@@ -104,14 +104,14 @@ app.post('/verify_code', (req, res) => {
 
     // 確認が成功した場合の処理
     if (result !== undefined) {
-      res.send(JSON.stringify({
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
         message: 'Success',
         result
       }))
     } else {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
-        error: 'result is undefined'
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while verify code.',
+        error: err?.message
       }))
     }
   })
@@ -135,14 +135,14 @@ app.post('/sign_in', (req, res) => {
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: result => {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     },
     onFailure: err => {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while sign in.',
         error: err?.message
       }))
     }
@@ -152,8 +152,8 @@ app.post('/sign_in', (req, res) => {
 app.get('/verify_jwt', (req, res) => {
   const accessToken = getJwtToken(req)
   if (accessToken === null) {
-    res.status(400).send(JSON.stringify({
-      message: 'Invalid Authorization header.'
+    res.status(statusCode.FORBIDDEN).send(JSON.stringify({
+      message: 'Authorization header is missing.'
     }))
     return
   }
@@ -163,7 +163,7 @@ app.get('/verify_jwt', (req, res) => {
   }, (err, result) => {
     // ユーザー情報の取得がエラーとなった場合の処理
     if (err !== null) {
-      res.status(402).send(JSON.stringify({
+      res.status(statusCode.FORBIDDEN).send(JSON.stringify({
         message: 'Invalid Access Token.',
         error: err?.message
       }))
@@ -172,14 +172,13 @@ app.get('/verify_jwt', (req, res) => {
 
     // ユーザー情報の取得が成功した場合の処理
     if (result !== undefined) {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     } else {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
-        error: 'result is undefined'
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while verify JWT.'
       }))
     }
   })
@@ -188,8 +187,8 @@ app.get('/verify_jwt', (req, res) => {
 app.delete('/sign_out', (req, res) => {
   const accessToken = getJwtToken(req)
   if (accessToken === null) {
-    res.status(400).send(JSON.stringify({
-      message: 'Invalid Authorization header.'
+    res.status(statusCode.FORBIDDEN).send(JSON.stringify({
+      message: 'Authorization header is missing.'
     }))
     return
   }
@@ -199,7 +198,7 @@ app.delete('/sign_out', (req, res) => {
   }, (err, result) => {
     // サインアウトがエラーとなった場合の処理
     if (err !== null) {
-      res.status(403).send(JSON.stringify({
+      res.status(statusCode.FORBIDDEN).send(JSON.stringify({
         message: 'Invalid Access Token.',
         error: err?.message
       }))
@@ -208,14 +207,13 @@ app.delete('/sign_out', (req, res) => {
 
     // サインアウトが成功した場合の処理
     if (result !== undefined) {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     } else {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
-        error: 'result is undefined'
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while sign out.'
       }))
     }
   })
@@ -243,8 +241,8 @@ app.put('/change_password', (req, res) => {
       cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
         // パスワード変更がエラーとなった場合の処理
         if (err !== null) {
-          res.status(500).send(JSON.stringify({
-            message: 'Internal Server Error',
+          res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
+            message: 'Value is invalid.',
             error: err?.message
           }))
           return
@@ -252,20 +250,19 @@ app.put('/change_password', (req, res) => {
 
         // パスワード変更が成功した場合の処理
         if (result !== undefined) {
-          res.send(JSON.stringify({
-            message: 'Success',
+          res.status(statusCode.SUCCESS).send(JSON.stringify({
+            message: 'Success.',
             result
           }))
         } else {
-          res.status(500).send(JSON.stringify({
-            message: 'Internal Server Error',
-            error: 'result is undefined'
+          res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+            message: 'Server error occurred while change password.'
           }))
         }
       })
     },
     onFailure: err => {
-      res.status(400).send(JSON.stringify({
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
         message: 'Failed to change password.',
         error: err?.message
       }))
@@ -285,13 +282,13 @@ app.put('/reset_password', (req, res) => {
 
   cognitoUser.forgotPassword({
     onSuccess: result => {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     },
     onFailure: err => {
-      res.status(400).send(JSON.stringify({
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
         message: 'Failed to reset password.',
         error: err?.message
       }))
@@ -313,13 +310,13 @@ app.put('/confirm_password', (req, res) => {
 
   cognitoUser.confirmPassword(verificationCode, newPassword, {
     onSuccess: result => {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     },
     onFailure: err => {
-      res.status(400).send(JSON.stringify({
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
         message: 'Failed to confirm password.',
         error: err?.message
       }))
@@ -330,8 +327,8 @@ app.put('/confirm_password', (req, res) => {
 app.put('/update_attributes', (req, res) => {
   const accessToken = getJwtToken(req)
   if (accessToken === null) {
-    res.status(400).send(JSON.stringify({
-      message: 'Invalid Authorization header.'
+    res.status(statusCode.FORBIDDEN).send(JSON.stringify({
+      message: 'Authorization header is missing.'
     }))
     return
   }
@@ -353,8 +350,8 @@ app.put('/update_attributes', (req, res) => {
   }, (err, result) => {
     // ユーザー属性の更新がエラーとなった場合の処理
     if (err !== null) {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
+        message: 'Value is invalid.',
         error: err?.message
       }))
       return
@@ -362,14 +359,13 @@ app.put('/update_attributes', (req, res) => {
 
     // ユーザー属性の更新が成功した場合の処理
     if (result !== undefined) {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     } else {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
-        error: 'result is undefined'
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while update attributes.'
       }))
     }
   })
@@ -378,8 +374,8 @@ app.put('/update_attributes', (req, res) => {
 app.delete('/withdrawal', (req, res) => {
   const accessToken = getJwtToken(req)
   if (accessToken === null) {
-    res.status(400).send(JSON.stringify({
-      message: 'Invalid Authorization header.'
+    res.status(statusCode.FORBIDDEN).send(JSON.stringify({
+      message: 'Authorization header is missing.'
     }))
     return
   }
@@ -389,8 +385,8 @@ app.delete('/withdrawal', (req, res) => {
   }, (err, result) => {
     // ユーザーの削除がエラーとなった場合の処理
     if (err !== null) {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
+      res.status(statusCode.CLIENT_ERROR).send(JSON.stringify({
+        message: 'Invalid operation.',
         error: err?.message
       }))
       return
@@ -398,14 +394,13 @@ app.delete('/withdrawal', (req, res) => {
 
     // ユーザーの削除が成功した場合の処理
     if (result !== undefined) {
-      res.send(JSON.stringify({
-        message: 'Success',
+      res.status(statusCode.SUCCESS).send(JSON.stringify({
+        message: 'Success.',
         result
       }))
     } else {
-      res.status(500).send(JSON.stringify({
-        message: 'Internal Server Error',
-        error: 'result is undefined'
+      res.status(statusCode.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+        message: 'Server error occurred while withdrawal.'
       }))
     }
   })
