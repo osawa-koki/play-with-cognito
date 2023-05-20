@@ -7,12 +7,12 @@ import type SignUpStruct from './interface/sign_up_struct'
 import getJwtToken from './common/getJwtToken'
 import areAllNonEmptyStrings from './common/areAllNonEmptyStrings'
 import makeCognitoUserAttributes from './common/makeCognitoUserAttributes'
-import VerifyCodeStruct from './interface/verify_code_struct'
-import SignInStruct from './interface/sign_in_struct'
-import ChangePasswordStruct from './interface/change_password_struct'
-import ResetPasswordStruct from './interface/reset_password_struct'
-import ConfirmPasswordStruct from './interface/confirm_password_struct'
-import UpdateAttributesStruct from './interface/update_attributes_struct'
+import type VerifyCodeStruct from './interface/verify_code_struct'
+import type SignInStruct from './interface/sign_in_struct'
+import type ChangePasswordStruct from './interface/change_password_struct'
+import type ResetPasswordStruct from './interface/reset_password_struct'
+import type ConfirmPasswordStruct from './interface/confirm_password_struct'
+import type UpdateAttributesStruct from './interface/update_attributes_struct'
 
 const app = express()
 
