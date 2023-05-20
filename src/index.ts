@@ -5,6 +5,7 @@ import express from 'express'
 import getEnvVar from './common/getEnvVar'
 import { userPool } from './common/cognito'
 import type SignUpStruct from './interface/sign_up_struct'
+import getJwtToken from './common/getJwtToken'
 
 const app = express()
 
@@ -144,8 +145,8 @@ app.post('/sign_in', (req, res) => {
 })
 
 app.get('/verify_jwt', (req, res) => {
-  const accessToken = req.headers.authorization?.split(' ')[1]
-  if (accessToken === undefined) {
+  const accessToken = getJwtToken(req)
+  if (accessToken === null) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid Authorization header.'
     }))
@@ -182,8 +183,8 @@ app.get('/verify_jwt', (req, res) => {
 })
 
 app.delete('/sign_out', (req, res) => {
-  const accessToken = req.headers.authorization?.split(' ')[1]
-  if (accessToken === undefined) {
+  const accessToken = getJwtToken(req)
+  if (accessToken === null) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid Authorization header.'
     }))
@@ -323,8 +324,8 @@ app.put('/confirm_password', (req, res) => {
 })
 
 app.put('/update_attributes', (req, res) => {
-  const accessToken = req.headers.authorization?.split(' ')[1]
-  if (accessToken === undefined) {
+  const accessToken = getJwtToken(req)
+  if (accessToken === null) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid Authorization header.'
     }))
@@ -372,8 +373,8 @@ app.put('/update_attributes', (req, res) => {
 })
 
 app.delete('/withdrawal', (req, res) => {
-  const accessToken = req.headers.authorization?.split(' ')[1]
-  if (accessToken === undefined) {
+  const accessToken = getJwtToken(req)
+  if (accessToken === null) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid Authorization header.'
     }))
