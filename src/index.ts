@@ -1,11 +1,12 @@
 import './common/initializer'
-import { CognitoIdentityServiceProvider } from 'aws-sdk'
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js'
 import express from 'express'
 import getEnvVar from './common/getEnvVar'
-import { userPool } from './common/cognito'
+import { cognitoidentityserviceprovider, userPool } from './common/cognito'
 import type SignUpStruct from './interface/sign_up_struct'
 import getJwtToken from './common/getJwtToken'
+import areAllNonEmptyStrings from './common/areAllNonEmptyStrings'
+import makeCognitoUserAttributes from './common/makeCognitoUserAttributes'
 
 const app = express()
 
@@ -28,23 +29,17 @@ app.post('/sign_up', (req, res) => {
   const email = body.email
   const password = body.password
 
-  if (name === '' || email === '' || password === '') {
+  if (areAllNonEmptyStrings(name, email, password) === false) {
     res.status(400).send(JSON.stringify({
       message: 'Invalid JSON property.'
     }))
     return
   }
 
-  const attributeList = [
-    {
-      Name: 'name',
-      Value: name
-    },
-    {
-      Name: 'email',
-      Value: email
-    }
-  ].map(attribute => new AmazonCognitoIdentity.CognitoUserAttribute(attribute))
+  const attributeList = makeCognitoUserAttributes({
+    name,
+    email
+  })
 
   userPool.signUp(
     email,
@@ -153,8 +148,6 @@ app.get('/verify_jwt', (req, res) => {
     return
   }
 
-  const newLocal = 'ap-northeast-1'
-  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
   cognitoidentityserviceprovider.getUser({
     AccessToken: accessToken
   }, (err, result) => {
@@ -191,8 +184,6 @@ app.delete('/sign_out', (req, res) => {
     return
   }
 
-  const newLocal = 'ap-northeast-1'
-  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
   cognitoidentityserviceprovider.globalSignOut({
     AccessToken: accessToken
   }, (err, result) => {
@@ -342,8 +333,6 @@ app.put('/update_attributes', (req, res) => {
     }))
   }
 
-  const newLocal = 'ap-northeast-1'
-  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
   cognitoidentityserviceprovider.updateUserAttributes({
     AccessToken: accessToken,
     UserAttributes: attributes
@@ -381,8 +370,6 @@ app.delete('/withdrawal', (req, res) => {
     return
   }
 
-  const newLocal = 'ap-northeast-1'
-  const cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({ region: newLocal })
   cognitoidentityserviceprovider.deleteUser({
     AccessToken: accessToken
   }, (err, result) => {

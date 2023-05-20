@@ -12,6 +12,9 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    // `isTrue === false`を許可する。
+    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
+
     // https://eslint.org/docs/latest/rules/comma-dangle
     'comma-dangle': ['error', {
       arrays: 'ignore',
