@@ -3,16 +3,18 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js'
 import express from 'express'
 import getEnvVar from './common/getEnvVar'
 import { cognitoidentityserviceprovider, userPool } from './common/cognito'
-import type SignUpStruct from './interface/sign_up_struct'
 import getJwtToken from './common/getJwtToken'
 import areAllNonEmptyStrings from './common/areAllNonEmptyStrings'
 import makeCognitoUserAttributes from './common/makeCognitoUserAttributes'
-import type VerifyCodeStruct from './interface/verify_code_struct'
-import type SignInStruct from './interface/sign_in_struct'
-import type ChangePasswordStruct from './interface/change_password_struct'
-import type ResetPasswordStruct from './interface/reset_password_struct'
-import type ConfirmPasswordStruct from './interface/confirm_password_struct'
-import type UpdateAttributesStruct from './interface/update_attributes_struct'
+import {
+  type SignUpStruct,
+  type VerifyCodeStruct,
+  type SignInStruct,
+  type ChangePasswordStruct,
+  type ResetPasswordStruct,
+  type ConfirmPasswordStruct,
+  type UpdateAttributesStruct
+} from './interface/interface'
 
 const app = express()
 
