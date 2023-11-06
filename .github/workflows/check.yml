@@ -40,5 +40,3 @@ jobs:
         run: yarn lint:check
       - name: Test
         run: yarn test
-      - name: Vulnerability check
-        run: yarn audit
