@@ -17,7 +17,7 @@ GitHub Secretsに以下の値を設定します。
 
 ### デプロイ
 
-`main`ブランチにpushすると、GitHub Actionsが実行され、CloudFormationのスタックがデプロイされます。  
+`v-*`形式のタグをプッシュすると、GitHub Actionsが実行され、CloudFormationのスタックがデプロイされます。  
 これで、以下のリソースがプロビジョニングされます。  
 
 - Cognito User Pool
