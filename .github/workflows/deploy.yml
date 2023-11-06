@@ -3,8 +3,7 @@ name: Deploy
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    tags: [ v-* ]
 
 env:
   project-name: ${{ secrets.PROJECT_NAME }}
@@ -21,6 +20,5 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - run: sam build --use-container
       - name: Deploy Lambda
         run: sam deploy --stack-name ${{ env.project-name }}-production
